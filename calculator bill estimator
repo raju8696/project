@@ -1,0 +1,66 @@
+import tkinter as tk
+from tkinter import messagebox
+import random
+
+# Function to calculate the electric bill
+def calculate_bill():
+    try:
+        units = float(entry_units.get())
+        cost_per_unit = float(entry_cost.get())
+        fixed_charge = float(entry_fixed.get() or 0)
+
+        total = (units * cost_per_unit) + fixed_charge
+        result_label.config(text=f"Estimated Bill: ₹{total:,.2f}")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter valid numeric values.")
+
+# Function to create firecracker spark effect
+def create_spark(canvas):
+    x = random.randint(5, 45)
+    y = random.randint(5, 245)
+    r = random.randint(2, 4)
+    color = random.choice(["red", "yellow", "orange", "white", "blue", "violet"])
+    spark = canvas.create_oval(x, y, x + r, y + r, fill=color, outline="")
+    canvas.after(300, lambda: canvas.delete(spark))
+    canvas.after(100, lambda: create_spark(canvas))
+
+# Main window
+root = tk.Tk()
+root.title("Electric Bill Estimator 💡 (India)")
+root.geometry("400x300")
+root.resizable(False, False)
+root.configure(bg="black")
+
+# Left Firecracker Canvas
+left_canvas = tk.Canvas(root, width=50, height=300, bg="black", highlightthickness=0)
+left_canvas.pack(side="left")
+create_spark(left_canvas)
+
+# Right Firecracker Canvas
+right_canvas = tk.Canvas(root, width=50, height=300, bg="black", highlightthickness=0)
+right_canvas.pack(side="right")
+create_spark(right_canvas)
+
+# Center frame for UI
+center_frame = tk.Frame(root, bg="black")
+center_frame.pack(expand=True)
+
+tk.Label(center_frame, text="Units Consumed (kWh):", bg="black", fg="white").pack(pady=5)
+entry_units = tk.Entry(center_frame)
+entry_units.pack()
+
+tk.Label(center_frame, text="Cost per Unit (₹):", bg="black", fg="white").pack(pady=5)
+entry_cost = tk.Entry(center_frame)
+entry_cost.pack()
+
+tk.Label(center_frame, text="Fixed Monthly Charge (₹):", bg="black", fg="white").pack(pady=5)
+entry_fixed = tk.Entry(center_frame)
+entry_fixed.pack()
+
+tk.Button(center_frame, text="Calculate Bill", command=calculate_bill).pack(pady=15)
+
+result_label = tk.Label(center_frame, text="Estimated Bill: ₹0.00", font=("Arial", 12, "bold"), bg="black", fg="lightgreen")
+result_label.pack()
+
+# Start the GUI loop
+root.mainloop() 
